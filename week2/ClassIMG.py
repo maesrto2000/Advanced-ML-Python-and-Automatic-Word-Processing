@@ -13,7 +13,7 @@ def extract_histogram(image, bins=(8, 8, 8)):
 # Создание массивов гистограмм и меток
 data = []
 labels = []
-for imagePath in sorted(list(paths.list_images("/content/drive/MyDrive/train"))):
+for imagePath in sorted(list(paths.list_images("/content/drive/MyDrive/test"))):
     image = cv2.imread(imagePath)
     hist = extract_histogram(image)
     label = 0 if "cat" in imagePath else 1
@@ -35,7 +35,21 @@ print("Accuracy: {:.2f}%".format(accuracy * 100))
 # Получение коэффициентов гиперплоскости
 coef = model.coef_
 intercept = model.intercept_
-#print("Coefficient of hyperplane:", coef)
-print("Theta 131:", coef[0, 130])
-print("Theta 131:", coef[0, 291])
-print("Theta 131:", coef[0, 37])
+print("Coefficient of hyperplane:", coef)
+
+# Выполните предсказание для изображений, указанных ниже. 
+# Введите назначенный класс: 0 или 1. 
+# cat.1006.jpg, dog.1046.jpg, dog.1043.jpg, dog.1017.jpg. 
+# Файлы находятся в папке train, измени код
+
+test_images = ["cat.1006.jpg", "dog.1046.jpg", "dog.1043.jpg", "dog.1017.jpg"]
+for test_image in test_images:
+    test_image_path = "/content/drive/MyDrive/test/" + test_image
+    test_image_data = cv2.imread(test_image_path)
+    test_hist = extract_histogram(test_image_data)
+    test_hist = np.array(test_hist).reshape(1, -1)
+    prediction = model.predict(test_hist)[0]
+    if prediction == 0:
+        print("Image {} is a cat".format(test_image))
+    else:
+        print("Image {} is a dog".format(test_image))
